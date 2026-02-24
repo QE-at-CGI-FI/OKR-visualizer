@@ -724,20 +724,261 @@ class OKRApp {
     }
 
     printForPowerPoint() {
-        // Create a new window for printing
-        const printWindow = window.open('', '_blank');
-        
-        // Generate PowerPoint-optimized HTML
-        const printableHTML = this.generatePowerPointHTML();
-        
-        printWindow.document.write(printableHTML);
-        printWindow.document.close();
-        
-        // Wait for content to load, then print
-        printWindow.onload = () => {
-            printWindow.print();
-            printWindow.close();
+        // Show condensed view in current page
+        this.showCondensedView();
+    }
+
+    showCondensedView() {
+        // Create or get the condensed view container
+        let condensedContainer = document.getElementById('condensed-view');
+        if (!condensedContainer) {
+            condensedContainer = document.createElement('div');
+            condensedContainer.id = 'condensed-view';
+            condensedContainer.className = 'condensed-overlay';
+            document.body.appendChild(condensedContainer);
+        }
+
+        // Generate the condensed HTML
+        const condensedHTML = this.generateCondensedHTML();
+        condensedContainer.innerHTML = condensedHTML;
+        condensedContainer.style.display = 'block';
+
+        // Add close button functionality
+        const closeBtn = condensedContainer.querySelector('.condensed-close');
+        closeBtn.addEventListener('click', () => {
+            condensedContainer.style.display = 'none';
+        });
+
+        // Close on escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                condensedContainer.style.display = 'none';
+                document.removeEventListener('keydown', handleEscape);
+            }
         };
+        document.addEventListener('keydown', handleEscape);
+    }
+
+    generateCondensedHTML() {
+        const currentDate = new Date().toLocaleDateString();
+        const totalKeyResults = this.data.objectives.reduce((total, obj) => total + obj.keyResults.length, 0);
+        const completedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'done').length, 0);
+        const startedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status !== 'not-started' && kr.status !== 'done').length, 0);
+        const notStartedKeyResults = totalKeyResults - completedKeyResults - startedKeyResults;
+        
+        // Categorize by revenue type
+        const revenueGenerating = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => ['DEL', 'EXT', 'EXT/DEL'].includes(kr.type)).length, 0);
+        const investment = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.type === 'INV').length, 0);
+
+        const objectivesHTML = this.data.objectives.map((objective, index) => {
+            const keyResultsHTML = objective.keyResults.map(kr => {
+                const statusIcon = this.getStatusIcon(kr.status);
+                const typeClass = this.getTypeClass(kr.type);
+                const statusClass = this.getStatusClass(kr.status);
+                
+                return `
+                    <div class="condensed-kr ${statusClass} ${typeClass}">
+                        <span class="condensed-kr-status ${this.getStatusClass(kr.status)}">${statusIcon}</span>
+                        <span class="condensed-kr-title">${this.escapeHtml(kr.title)}</span>
+                        <span class="condensed-kr-type condensed-type-${kr.type?.toLowerCase()?.replace('/', '-') || 'none'}">${kr.type || 'N/A'}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            const doneCount = objective.keyResults.filter(kr => kr.status === 'done').length;
+            const progressPercent = objective.keyResults.length > 0 ? 
+                Math.round((doneCount / objective.keyResults.length) * 100) : 0;
+
+            return `
+                <div class="condensed-objective">
+                    <div class="condensed-obj-header">
+                        <span class="condensed-obj-number">${index + 1}.</span>
+                        <span class="condensed-obj-title">${this.escapeHtml(objective.title)}</span>
+                        <span class="condensed-obj-progress">${doneCount}/${objective.keyResults.length} (${progressPercent}%)</span>
+                    </div>
+                    <div class="condensed-kr-list">
+                        ${keyResultsHTML}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        return `
+            <div class="condensed-content">
+                <div class="condensed-header">
+                    <h2>OKR Overview</h2>
+                    <button class="condensed-close">✕</button>
+                </div>
+                
+                <div class="condensed-summary">
+                    <span class="condensed-stat completed">✓ ${completedKeyResults}</span>
+                    <span class="condensed-stat started">● ${startedKeyResults}</span>
+                    <span class="condensed-stat not-started">○ ${notStartedKeyResults}</span>
+                    <span class="condensed-stat revenue">$ ${revenueGenerating}</span>
+                    <span class="condensed-stat investment">⬆ ${investment}</span>
+                </div>
+                
+                <div class="condensed-objectives">
+                    ${objectivesHTML}
+                </div>
+            </div>
+            
+            <style>
+                .condensed-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.8);
+                    z-index: 10000;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                }
+                .condensed-content {
+                    background: white;
+                    border-radius: 12px;
+                    max-width: 90vw;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                }
+                .condensed-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 20px 25px;
+                    border-bottom: 2px solid #ecf0f1;
+                    background: #3498db;
+                    color: white;
+                    border-radius: 12px 12px 0 0;
+                }
+                .condensed-header h2 {
+                    margin: 0;
+                    font-size: 18px;
+                }
+                .condensed-close {
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 20px;
+                    cursor: pointer;
+                    padding: 5px;
+                    border-radius: 4px;
+                }
+                .condensed-close:hover {
+                    background: rgba(255,255,255,0.2);
+                }
+                .condensed-summary {
+                    display: flex;
+                    gap: 15px;
+                    padding: 15px 25px;
+                    background: #f8f9fa;
+                    border-bottom: 1px solid #dee2e6;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                }
+                .condensed-stat {
+                    font-size: 12px;
+                    font-weight: bold;
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    background: white;
+                    border: 1px solid #dee2e6;
+                }
+                .condensed-stat.completed { color: #27ae60; }
+                .condensed-stat.started { color: #f39c12; }
+                .condensed-stat.not-started { color: #95a5a6; }
+                .condensed-stat.revenue { color: #27ae60; }
+                .condensed-stat.investment { color: #8e44ad; }
+                .condensed-objectives {
+                    padding: 20px 25px;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    align-items: start;
+                }
+                .condensed-objective {
+                    margin-bottom: 20px;
+                    border: 1px solid #dee2e6;
+                    border-radius: 8px;
+                    overflow: hidden;
+                }
+                .condensed-obj-header {
+                    background: #f8f9fa;
+                    padding: 10px 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-weight: bold;
+                    font-size: 12px;
+                    border-bottom: 1px solid #dee2e6;
+                }
+                .condensed-obj-number {
+                    color: #6c757d;
+                    min-width: 20px;
+                }
+                .condensed-obj-title {
+                    flex: 1;
+                    color: #2c3e50;
+                }
+                .condensed-obj-progress {
+                    color: #6c757d;
+                    font-size: 10px;
+                }
+                .condensed-kr-list {
+                    padding: 10px 15px;
+                }
+                .condensed-kr {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 4px 0;
+                    font-size: 11px;
+                    border-left: 3px solid transparent;
+                    padding-left: 8px;
+                    margin-bottom: 3px;
+                }
+                .condensed-kr.revenue { border-left-color: #27ae60; }
+                .condensed-kr.investment { border-left-color: #8e44ad; }
+                .condensed-kr-status {
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 10px;
+                    font-weight: bold;
+                    flex-shrink: 0;
+                }
+                .condensed-kr-status.status-done { background: #27ae60; color: white; }
+                .condensed-kr-status.status-started { background: #f39c12; color: white; }
+                .condensed-kr-status.status-not-started { background: #95a5a6; color: white; }
+                .condensed-kr-title {
+                    flex: 1;
+                    line-height: 1.3;
+                }
+                .condensed-kr-type {
+                    font-size: 9px;
+                    padding: 2px 6px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                }
+                .condensed-type-del { background: #27ae60; color: white; }
+                .condensed-type-ext { background: #3498db; color: white; }
+                .condensed-type-inv { background: #8e44ad; color: white; }
+                .condensed-type-ext-del { background: #16a085; color: white; }
+                .condensed-type-none { background: #95a5a6; color: white; }
+            </style>
+        `;
     }
 
     generatePowerPointHTML() {
