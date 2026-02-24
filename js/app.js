@@ -774,38 +774,48 @@ class OKRApp {
         const investment = this.data.objectives.reduce((total, obj) => 
             total + obj.keyResults.filter(kr => kr.type === 'INV').length, 0);
 
-        const objectivesHTML = this.data.objectives.map((objective, index) => {
-            const keyResultsHTML = objective.keyResults.map(kr => {
-                const statusIcon = this.getStatusIcon(kr.status);
-                const typeClass = this.getTypeClass(kr.type);
-                const statusClass = this.getStatusClass(kr.status);
+        // Split objectives into two halves
+        const midpoint = Math.ceil(this.data.objectives.length / 2);
+        const leftObjectives = this.data.objectives.slice(0, midpoint);
+        const rightObjectives = this.data.objectives.slice(midpoint);
+
+        const generateObjectivesHTML = (objectives, startIndex = 0) => {
+            return objectives.map((objective, index) => {
+                const keyResultsHTML = objective.keyResults.map(kr => {
+                    const statusIcon = this.getStatusIcon(kr.status);
+                    const typeClass = this.getTypeClass(kr.type);
+                    const statusClass = this.getStatusClass(kr.status);
+                    
+                    return `
+                        <div class="condensed-kr ${statusClass} ${typeClass}">
+                            <span class="condensed-kr-status ${this.getStatusClass(kr.status)}">${statusIcon}</span>
+                            <span class="condensed-kr-title">${this.escapeHtml(kr.title)}</span>
+                            <span class="condensed-kr-type condensed-type-${kr.type?.toLowerCase()?.replace('/', '-') || 'none'}">${kr.type || 'N/A'}</span>
+                        </div>
+                    `;
+                }).join('');
                 
+                const doneCount = objective.keyResults.filter(kr => kr.status === 'done').length;
+                const progressPercent = objective.keyResults.length > 0 ? 
+                    Math.round((doneCount / objective.keyResults.length) * 100) : 0;
+
                 return `
-                    <div class="condensed-kr ${statusClass} ${typeClass}">
-                        <span class="condensed-kr-status ${this.getStatusClass(kr.status)}">${statusIcon}</span>
-                        <span class="condensed-kr-title">${this.escapeHtml(kr.title)}</span>
-                        <span class="condensed-kr-type condensed-type-${kr.type?.toLowerCase()?.replace('/', '-') || 'none'}">${kr.type || 'N/A'}</span>
+                    <div class="condensed-objective">
+                        <div class="condensed-obj-header">
+                            <span class="condensed-obj-number">${startIndex + index + 1}.</span>
+                            <span class="condensed-obj-title">${this.escapeHtml(objective.title)}</span>
+                            <span class="condensed-obj-progress">${doneCount}/${objective.keyResults.length} (${progressPercent}%)</span>
+                        </div>
+                        <div class="condensed-kr-list">
+                            ${keyResultsHTML}
+                        </div>
                     </div>
                 `;
             }).join('');
-            
-            const doneCount = objective.keyResults.filter(kr => kr.status === 'done').length;
-            const progressPercent = objective.keyResults.length > 0 ? 
-                Math.round((doneCount / objective.keyResults.length) * 100) : 0;
+        };
 
-            return `
-                <div class="condensed-objective">
-                    <div class="condensed-obj-header">
-                        <span class="condensed-obj-number">${index + 1}.</span>
-                        <span class="condensed-obj-title">${this.escapeHtml(objective.title)}</span>
-                        <span class="condensed-obj-progress">${doneCount}/${objective.keyResults.length} (${progressPercent}%)</span>
-                    </div>
-                    <div class="condensed-kr-list">
-                        ${keyResultsHTML}
-                    </div>
-                </div>
-            `;
-        }).join('');
+        const leftObjectivesHTML = generateObjectivesHTML(leftObjectives, 0);
+        const rightObjectivesHTML = generateObjectivesHTML(rightObjectives, leftObjectives.length);
 
         return `
             <div class="condensed-content">
@@ -823,7 +833,12 @@ class OKRApp {
                 </div>
                 
                 <div class="condensed-objectives">
-                    ${objectivesHTML}
+                    <div class="condensed-column">
+                        ${leftObjectivesHTML}
+                    </div>
+                    <div class="condensed-column">
+                        ${rightObjectivesHTML}
+                    </div>
                 </div>
             </div>
             
@@ -899,10 +914,15 @@ class OKRApp {
                 .condensed-stat.investment { color: #8e44ad; }
                 .condensed-objectives {
                     padding: 20px 25px;
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
+                    display: flex;
                     gap: 20px;
                     align-items: start;
+                }
+                .condensed-column {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
                 }
                 .condensed-objective {
                     margin-bottom: 20px;
