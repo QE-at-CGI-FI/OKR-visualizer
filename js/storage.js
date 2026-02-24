@@ -117,12 +117,12 @@ class OKRStorage {
 
         // Validate each objective
         for (const objective of data.objectives) {
-            if (!objective.id || !objective.title) return false;
+            if (objective.id == null || !objective.title) return false;
             if (!Array.isArray(objective.keyResults)) return false;
 
             // Validate each key result
             for (const kr of objective.keyResults) {
-                if (!kr.id || !kr.title || !kr.status) return false;
+                if (kr.id == null || !kr.title || !kr.status) return false;
                 if (!['not-started', 'on-track', 'behind', 'at-risk', 'done'].includes(kr.status)) return false;
             }
         }
@@ -148,21 +148,21 @@ class OKRStorage {
 
         // Ensure all objectives and key results have valid IDs
         cleanData.objectives.forEach(objective => {
-            if (!objective.id) {
+            if (objective.id == null) {
                 objective.id = cleanData.nextObjectiveId++;
             }
-            if (!objective.order) {
+            if (objective.order == null) {
                 objective.order = objective.id;
             }
 
             objective.keyResults.forEach(kr => {
-                if (!kr.id) {
+                if (kr.id == null) {
                     kr.id = cleanData.nextKeyResultId++;
                 }
-                if (!kr.order) {
+                if (kr.order == null) {
                     kr.order = kr.id;
                 }
-                if (!kr.objectiveId) {
+                if (kr.objectiveId == null) {
                     kr.objectiveId = objective.id;
                 }
             });
