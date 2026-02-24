@@ -49,6 +49,10 @@ class OKRApp {
             this.importData(e.target.files[0]);
         });
 
+        document.getElementById('print-btn').addEventListener('click', () => {
+            this.printOKRs();
+        });
+
         // Modal event listeners
         this.setupModalEventListeners();
     }
@@ -440,6 +444,235 @@ class OKRApp {
                 console.error('Import error:', error);
                 this.showNotification('Failed to import data: ' + error.message, 'error');
             });
+    }
+
+    printOKRs() {
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank');
+        
+        // Generate printable HTML
+        const printableHTML = this.generatePrintableHTML();
+        
+        printWindow.document.write(printableHTML);
+        printWindow.document.close();
+        
+        // Wait for content to load, then print
+        printWindow.onload = () => {
+            printWindow.print();
+            printWindow.close();
+        };
+    }
+
+    generatePrintableHTML() {
+        const currentDate = new Date().toLocaleDateString();
+        const totalObjectives = this.data.objectives.length;
+        const totalKeyResults = this.data.objectives.reduce((total, obj) => total + obj.keyResults.length, 0);
+        const completedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'done').length, 0);
+        const overallProgress = totalKeyResults > 0 ? Math.round((completedKeyResults / totalKeyResults) * 100) : 0;
+        
+        const objectivesHTML = this.data.objectives.map(objective => {
+            const doneKeyResults = objective.keyResults.filter(kr => kr.status === 'done').length;
+            const progressPercent = objective.keyResults.length > 0 ? 
+                Math.round((doneKeyResults / objective.keyResults.length) * 100) : 0;
+            
+            const keyResultsHTML = objective.keyResults.map(kr => `
+                <tr class="key-result-row">
+                    <td class="key-result-title">${this.escapeHtml(kr.title)}</td>
+                    <td class="key-result-status status-${kr.status}">${this.getStatusLabel(kr.status)}</td>
+                    <td class="key-result-type">${kr.type || 'N/A'}</td>
+                </tr>
+            `).join('');
+            
+            return `
+                <div class="print-objective">
+                    <div class="objective-header">
+                        <h2 class="objective-title">${this.escapeHtml(objective.title)}</h2>
+                        <div class="objective-progress">${doneKeyResults}/${objective.keyResults.length} Key Results Complete (${progressPercent}%)</div>
+                    </div>
+                    <table class="key-results-table">
+                        <thead>
+                            <tr>
+                                <th>Key Result</th>
+                                <th>Status</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${keyResultsHTML}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }).join('');
+        
+        return `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>OKR Report - ${currentDate}</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        font-size: 12px; 
+                        line-height: 1.4;
+                        color: #333;
+                        background: white;
+                    }
+                    .print-container { 
+                        max-width: 100%; 
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    .print-header { 
+                        text-align: center; 
+                        margin-bottom: 30px; 
+                        border-bottom: 2px solid #333;
+                        padding-bottom: 15px;
+                    }
+                    .print-header h1 { 
+                        font-size: 24px; 
+                        margin-bottom: 8px;
+                        color: #2c3e50;
+                    }
+                    .print-summary { 
+                        display: flex; 
+                        justify-content: space-around; 
+                        margin: 20px 0;
+                        padding: 15px;
+                        background: #f8f9fa;
+                        border: 1px solid #ddd;
+                    }
+                    .summary-item { 
+                        text-align: center;
+                    }
+                    .summary-label { 
+                        font-weight: bold;
+                        display: block;
+                        margin-bottom: 5px;
+                    }
+                    .summary-value { 
+                        font-size: 16px;
+                        color: #2c3e50;
+                        font-weight: bold;
+                    }
+                    .print-objective { 
+                        margin-bottom: 25px; 
+                        page-break-inside: avoid;
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                    }
+                    .objective-header { 
+                        background: #3498db; 
+                        color: white; 
+                        padding: 12px 15px;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .objective-title { 
+                        font-size: 16px; 
+                        font-weight: bold;
+                        margin: 0;
+                    }
+                    .objective-progress { 
+                        font-size: 12px;
+                        background: rgba(255,255,255,0.2);
+                        padding: 4px 8px;
+                        border-radius: 3px;
+                    }
+                    .key-results-table { 
+                        width: 100%; 
+                        border-collapse: collapse;
+                        margin: 0;
+                    }
+                    .key-results-table th { 
+                        background: #ecf0f1; 
+                        padding: 10px 12px; 
+                        text-align: left;
+                        font-weight: bold;
+                        border-bottom: 2px solid #bdc3c7;
+                    }
+                    .key-results-table td { 
+                        padding: 10px 12px; 
+                        border-bottom: 1px solid #ecf0f1;
+                        vertical-align: top;
+                    }
+                    .key-result-title { 
+                        width: 60%;
+                    }
+                    .key-result-status { 
+                        width: 25%;
+                        text-align: center;
+                        font-weight: bold;
+                    }
+                    .key-result-type { 
+                        width: 15%;
+                        text-align: center;
+                    }
+                    .status-done { color: #27ae60; }
+                    .status-on-track { color: #3498db; }
+                    .status-behind { color: #f39c12; }
+                    .status-at-risk { color: #e74c3c; }
+                    .status-not-started { color: #95a5a6; }
+                    @media print {
+                        body { font-size: 11px; }
+                        .print-container { padding: 15px; }
+                        .print-objective { 
+                            margin-bottom: 20px;
+                            page-break-inside: avoid;
+                        }
+                        .objective-header { padding: 10px 12px; }
+                        .key-results-table th, .key-results-table td { 
+                            padding: 8px 10px;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="print-container">
+                    <div class="print-header">
+                        <h1>OKR Report</h1>
+                        <div>Generated on ${currentDate}</div>
+                    </div>
+                    
+                    <div class="print-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Total Objectives</span>
+                            <span class="summary-value">${totalObjectives}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Total Key Results</span>
+                            <span class="summary-value">${totalKeyResults}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Completed Key Results</span>
+                            <span class="summary-value">${completedKeyResults}</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Overall Progress</span>
+                            <span class="summary-value">${overallProgress}%</span>
+                        </div>
+                    </div>
+                    
+                    ${objectivesHTML}
+                </div>
+            </body>
+            </html>
+        `;
+    }
+
+    getStatusLabel(status) {
+        const statusLabels = {
+            'not-started': 'Not Started',
+            'on-track': 'On Track',
+            'behind': 'Behind',
+            'at-risk': 'At Risk',
+            'done': 'Done'
+        };
+        return statusLabels[status] || status;
     }
 
     showNotification(message, type = 'info') {
