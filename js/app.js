@@ -53,6 +53,10 @@ class OKRApp {
             this.printOKRs();
         });
 
+        document.getElementById('print-ppt-btn').addEventListener('click', () => {
+            this.printForPowerPoint();
+        });
+
         // Modal event listeners
         this.setupModalEventListeners();
     }
@@ -717,6 +721,328 @@ class OKRApp {
                 document.body.removeChild(notification);
             }, 300);
         }, 4000);
+    }
+
+    printForPowerPoint() {
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank');
+        
+        // Generate PowerPoint-optimized HTML
+        const printableHTML = this.generatePowerPointHTML();
+        
+        printWindow.document.write(printableHTML);
+        printWindow.document.close();
+        
+        // Wait for content to load, then print
+        printWindow.onload = () => {
+            printWindow.print();
+            printWindow.close();
+        };
+    }
+
+    generatePowerPointHTML() {
+        const currentDate = new Date().toLocaleDateString();
+        const totalKeyResults = this.data.objectives.reduce((total, obj) => total + obj.keyResults.length, 0);
+        const completedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'done').length, 0);
+        const startedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status !== 'not-started' && kr.status !== 'done').length, 0);
+        const notStartedKeyResults = totalKeyResults - completedKeyResults - startedKeyResults;
+        
+        // Categorize by revenue type
+        const revenueGenerating = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => ['DEL', 'EXT', 'EXT/DEL'].includes(kr.type)).length, 0);
+        const investment = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.type === 'INV').length, 0);
+        
+        const objectivesHTML = this.data.objectives.map(objective => {
+            const keyResultsHTML = objective.keyResults.map(kr => {
+                const statusIcon = this.getStatusIcon(kr.status);
+                const typeClass = this.getTypeClass(kr.type);
+                const statusClass = this.getStatusClass(kr.status);
+                
+                return `
+                    <div class="ppt-kr-item ${statusClass} ${typeClass}">
+                        <div class="ppt-kr-status ${this.getStatusClass(kr.status)}">${statusIcon}</div>
+                        <div class="ppt-kr-title">${this.escapeHtml(kr.title)}</div>
+                        <div class="ppt-kr-badges">
+                            <span class="ppt-badge ppt-type-${kr.type?.toLowerCase()?.replace('/', '-') || 'none'}">${kr.type || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const doneCount = objective.keyResults.filter(kr => kr.status === 'done').length;
+            const progressPercent = objective.keyResults.length > 0 ? 
+                Math.round((doneCount / objective.keyResults.length) * 100) : 0;
+            
+            return `
+                <div class="ppt-objective">
+                    <div class="ppt-obj-header">
+                        <h3 class="ppt-obj-title">${this.escapeHtml(objective.title)}</h3>
+                        <div class="ppt-obj-progress">
+                            <div class="ppt-progress-bar">
+                                <div class="ppt-progress-fill" style="width: ${progressPercent}%"></div>
+                            </div>
+                            <span class="ppt-progress-text">${doneCount}/${objective.keyResults.length}</span>
+                        </div>
+                    </div>
+                    <div class="ppt-kr-grid">
+                        ${keyResultsHTML}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        return `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>OKR PowerPoint View - ${currentDate}</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body { 
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                        font-size: 11px;
+                        line-height: 1.3;
+                        color: #2c3e50;
+                        background: white;
+                        height: 100vh;
+                        overflow: hidden;
+                    }
+                    .ppt-container { 
+                        height: 100vh;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 15px;
+                    }
+                    .ppt-header { 
+                        text-align: center; 
+                        margin-bottom: 15px;
+                        border-bottom: 3px solid #3498db;
+                        padding-bottom: 10px;
+                    }
+                    .ppt-header h1 { 
+                        font-size: 20px; 
+                        color: #2c3e50;
+                        margin-bottom: 5px;
+                    }
+                    .ppt-date { 
+                        font-size: 10px;
+                        color: #7f8c8d;
+                    }
+                    .ppt-summary { 
+                        display: flex; 
+                        justify-content: center;
+                        gap: 20px;
+                        margin-bottom: 15px;
+                        padding: 10px;
+                        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                        border-radius: 8px;
+                        flex-wrap: wrap;
+                    }
+                    .ppt-summary-item { 
+                        text-align: center;
+                        min-width: 100px;
+                    }
+                    .ppt-summary-label { 
+                        font-size: 9px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        color: #6c757d;
+                        display: block;
+                        margin-bottom: 3px;
+                        letter-spacing: 0.5px;
+                    }
+                    .ppt-summary-value { 
+                        font-size: 16px;
+                        font-weight: bold;
+                        color: #2c3e50;
+                    }
+                    .ppt-summary-value.revenue { color: #27ae60; }
+                    .ppt-summary-value.investment { color: #8e44ad; }
+                    .ppt-summary-value.completed { color: #27ae60; }
+                    .ppt-summary-value.started { color: #f39c12; }
+                    .ppt-summary-value.not-started { color: #95a5a6; }
+                    .ppt-objectives { 
+                        flex: 1;
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                        gap: 15px;
+                        overflow-y: auto;
+                    }
+                    .ppt-objective { 
+                        border: 2px solid #ecf0f1;
+                        border-radius: 8px;
+                        background: white;
+                        height: fit-content;
+                    }
+                    .ppt-obj-header { 
+                        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+                        color: white; 
+                        padding: 8px 12px;
+                        border-radius: 6px 6px 0 0;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .ppt-obj-title { 
+                        font-size: 12px; 
+                        font-weight: bold;
+                        margin: 0;
+                        flex: 1;
+                    }
+                    .ppt-obj-progress {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                    .ppt-progress-bar {
+                        width: 60px;
+                        height: 6px;
+                        background: rgba(255,255,255,0.3);
+                        border-radius: 3px;
+                        overflow: hidden;
+                    }
+                    .ppt-progress-fill {
+                        height: 100%;
+                        background: #2ecc71;
+                        transition: width 0.3s ease;
+                    }
+                    .ppt-progress-text {
+                        font-size: 10px;
+                        font-weight: bold;
+                    }
+                    .ppt-kr-grid { 
+                        padding: 10px;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 6px;
+                    }
+                    .ppt-kr-item { 
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 6px 8px;
+                        border-radius: 4px;
+                        border-left: 4px solid #ecf0f1;
+                        min-height: 32px;
+                    }
+                    .ppt-kr-item.revenue { border-left-color: #27ae60; background: #f8fff9; }
+                    .ppt-kr-item.investment { border-left-color: #8e44ad; background: #faf8ff; }
+                    .ppt-kr-item.status-done { background: #f0fff4; }
+                    .ppt-kr-item.status-on-track { background: #f0f8ff; }
+                    .ppt-kr-item.status-behind { background: #fffbf0; }
+                    .ppt-kr-item.status-at-risk { background: #fff5f5; }
+                    .ppt-kr-item.status-not-started { background: #f8f9fa; }
+                    .ppt-kr-status { 
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 12px;
+                        font-weight: bold;
+                        flex-shrink: 0;
+                    }
+                    .ppt-kr-status.status-done { background: #27ae60; color: white; }
+                    .ppt-kr-status.status-started { background: #f39c12; color: white; }
+                    .ppt-kr-status.status-not-started { background: #95a5a6; color: white; }
+                    .ppt-kr-title { 
+                        flex: 1;
+                        font-size: 10px;
+                        line-height: 1.3;
+                    }
+                    .ppt-kr-badges {
+                        display: flex;
+                        gap: 4px;
+                        flex-shrink: 0;
+                    }
+                    .ppt-badge {
+                        font-size: 8px;
+                        padding: 2px 6px;
+                        border-radius: 10px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+                    .ppt-type-del { background: #27ae60; color: white; }
+                    .ppt-type-ext { background: #3498db; color: white; }
+                    .ppt-type-inv { background: #8e44ad; color: white; }
+                    .ppt-type-ext-del { background: #16a085; color: white; }
+                    .ppt-type-none { background: #95a5a6; color: white; }
+                    @media print {
+                        body { font-size: 10px; }
+                        .ppt-container { height: auto; }
+                        .ppt-objectives { 
+                            display: grid;
+                            grid-template-columns: repeat(2, 1fr);
+                            gap: 10px;
+                        }
+                        .ppt-kr-item { min-height: 28px; padding: 4px 6px; }
+                        .ppt-obj-header { padding: 6px 10px; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="ppt-container">
+                    <div class="ppt-header">
+                        <h1>OKR Status Overview</h1>
+                        <div class="ppt-date">${currentDate}</div>
+                    </div>
+                    
+                    <div class="ppt-summary">
+                        <div class="ppt-summary-item">
+                            <span class="ppt-summary-label">Completed</span>
+                            <span class="ppt-summary-value completed">${completedKeyResults}</span>
+                        </div>
+                        <div class="ppt-summary-item">
+                            <span class="ppt-summary-label">In Progress</span>
+                            <span class="ppt-summary-value started">${startedKeyResults}</span>
+                        </div>
+                        <div class="ppt-summary-item">
+                            <span class="ppt-summary-label">Not Started</span>
+                            <span class="ppt-summary-value not-started">${notStartedKeyResults}</span>
+                        </div>
+                        <div class="ppt-summary-item">
+                            <span class="ppt-summary-label">Revenue</span>
+                            <span class="ppt-summary-value revenue">${revenueGenerating}</span>
+                        </div>
+                        <div class="ppt-summary-item">
+                            <span class="ppt-summary-label">Investment</span>
+                            <span class="ppt-summary-value investment">${investment}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ppt-objectives">
+                        ${objectivesHTML}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+    }
+
+    getStatusIcon(status) {
+        switch (status) {
+            case 'done': return '✓';
+            case 'not-started': return '○';
+            default: return '●'; // on-track, behind, at-risk
+        }
+    }
+
+    getStatusClass(status) {
+        if (status === 'done') return 'status-done';
+        if (status === 'not-started') return 'status-not-started';
+        return 'status-started'; // on-track, behind, at-risk
+    }
+
+    getTypeClass(type) {
+        if (['DEL', 'EXT', 'EXT/DEL'].includes(type)) return 'revenue';
+        if (type === 'INV') return 'investment';
+        return 'other';
     }
 
     escapeHtml(text) {
