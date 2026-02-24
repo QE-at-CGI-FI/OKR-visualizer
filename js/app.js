@@ -774,15 +774,26 @@ class OKRApp {
         const investment = this.data.objectives.reduce((total, obj) => 
             total + obj.keyResults.filter(kr => kr.type === 'INV').length, 0);
 
-        // Split objectives into three columns with better balance
+        // Split objectives into three columns with better balance - distribute evenly with remainder going to middle first
         const totalObjectives = this.data.objectives.length;
-        const baseSize = Math.floor(totalObjectives / 3);
-        const remainder = totalObjectives % 3;
+        let firstColSize, secondColSize, thirdColSize;
         
-        // Distribute remainder to middle columns first for better visual balance
-        const firstColSize = baseSize;
-        const secondColSize = baseSize + (remainder > 0 ? 1 : 0);
-        const thirdColSize = baseSize + (remainder > 1 ? 1 : 0);
+        if (totalObjectives % 3 === 0) {
+            // Evenly divisible by 3
+            firstColSize = secondColSize = thirdColSize = totalObjectives / 3;
+        } else if (totalObjectives % 3 === 1) {
+            // 1 extra: distribute as 2,3,2 (middle gets extra)
+            const base = Math.floor(totalObjectives / 3);
+            firstColSize = base;
+            secondColSize = base + 1;
+            thirdColSize = base;
+        } else {
+            // 2 extra: distribute as 2,3,3 (middle and right get extra)
+            const base = Math.floor(totalObjectives / 3);
+            firstColSize = base;
+            secondColSize = base + 1;
+            thirdColSize = base + 1;
+        }
         
         const leftObjectives = this.data.objectives.slice(0, firstColSize);
         const middleObjectives = this.data.objectives.slice(firstColSize, firstColSize + secondColSize);
