@@ -139,10 +139,29 @@ body {
     line-height: 1.5;
 }
 
+.objective-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.objective-progress small {
+    opacity: 0.9;
+    font-size: 0.85rem;
+}
+
 .objective-controls {
     display: flex;
-    gap: 10px;
-    justify-content: flex-end;
+    gap: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.objective-card:hover .objective-controls {
+    opacity: 1;
+    visibility: visible;
 }
 
 .btn-small {
