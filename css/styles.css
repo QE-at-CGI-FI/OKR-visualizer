@@ -234,13 +234,13 @@ body {
 
 /* Key result type-based background colors */
 .key-result-item.del {
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%) !important;
+    border-top: 2px solid #1565C0;
 }
 
 .key-result-item.ext {
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%) !important;
+    border-top: 2px solid #1565C0;
 }
 
 .key-result-item.inv {
@@ -249,8 +249,8 @@ body {
 }
 
 .key-result-item.ext-del {
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%) !important;
+    border-top: 2px solid #1565C0;
 }
 
 .key-result-content {
