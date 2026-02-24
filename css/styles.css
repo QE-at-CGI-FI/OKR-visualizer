@@ -213,7 +213,7 @@ body {
 .key-result-item {
     background: #f8f9fa;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px 12px 8px 12px;
     margin-bottom: 8px;
     cursor: move;
     transition: all 0.3s ease;
@@ -293,7 +293,7 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     flex-direction: column;
 }
 
@@ -383,7 +383,7 @@ body {
     justify-content: flex-end;
     opacity: 0;
     transition: opacity 0.3s ease;
-    padding-top: 4px;
+    padding-top: 2px;
 }
 
 .key-result-item:hover .key-result-controls {
