@@ -168,6 +168,11 @@ body {
     border: 2px solid #2196f3;
 }
 
+.type-indicator.ext-del {
+    background: linear-gradient(45deg, #e8f5e8 50%, #fff3e0 50%);
+    border: 2px solid #9c27b0;
+}
+
 .legend-items {
     display: flex;
     gap: 20px;
@@ -330,6 +335,11 @@ body {
     border-top: 2px solid #2196f3;
 }
 
+.key-result-item.ext-del {
+    background: linear-gradient(135deg, #e8f5e8 0%, #fff3e0 50%, #f1f9f1 100%) !important;
+    border-top: 2px solid #9c27b0;
+}
+
 .key-result-content {
     display: flex;
     justify-content: space-between;
@@ -375,6 +385,11 @@ body {
 
 .key-result-type.inv {
     background: #2196f3;
+    color: white;
+}
+
+.key-result-type.ext-del {
+    background: #9c27b0;
     color: white;
 }
 

@@ -209,7 +209,7 @@ class OKRApp {
             'done': 'Done'
         };
 
-        const typeClass = keyResult.type ? keyResult.type.toLowerCase() : 'del';
+        const typeClass = keyResult.type ? keyResult.type.toLowerCase().replace('/', '-') : 'del';
 
         return `
             <div class="key-result-item ${keyResult.status} ${typeClass}" data-kr-id="${keyResult.id}" data-objective-id="${keyResult.objectiveId}">
