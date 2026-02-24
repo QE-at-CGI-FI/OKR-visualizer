@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKR Visualizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>OKR Visualizer</h1>
+            <div class="header-controls">
+                <button id="add-objective-btn" class="btn btn-primary">+ Add Objective</button>
+                <div class="file-controls">
+                    <button id="export-btn" class="btn btn-secondary">Export Data</button>
+                    <label for="import-file" class="btn btn-secondary">Import Data</label>
+                    <input type="file" id="import-file" accept=".json" style="display: none;">
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="status-legend">
+                <h3>Status Legend</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="status-indicator on-track"></span>
+                        <span>On Track</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="status-indicator behind"></span>
+                        <span>Behind</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="status-indicator at-risk"></span>
+                        <span>At Risk</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="status-indicator done"></span>
+                        <span>Done</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="objectives-container" class="objectives-container">
+                <!-- Objectives will be dynamically added here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal for adding/editing objectives -->
+    <div id="objective-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Add Objective</h2>
+            <form id="objective-form">
+                <div class="form-group">
+                    <label for="objective-title">Objective Title:</label>
+                    <input type="text" id="objective-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="objective-description">Description:</label>
+                    <textarea id="objective-description" rows="3"></textarea>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">Save Objective</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-objective">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for adding/editing key results -->
+    <div id="keyresult-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="kr-modal-title">Add Key Result</h2>
+            <form id="keyresult-form">
+                <div class="form-group">
+                    <label for="keyresult-title">Key Result Title:</label>
+                    <input type="text" id="keyresult-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="keyresult-description">Description:</label>
+                    <textarea id="keyresult-description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="keyresult-status">Status:</label>
+                    <select id="keyresult-status" required>
+                        <option value="on-track">On Track</option>
+                        <option value="behind">Behind</option>
+                        <option value="at-risk">At Risk</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">Save Key Result</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-keyresult">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "objectives": [
+    {
+      "id": 1,
+      "title": "Increase Customer Satisfaction",
+      "description": "Improve overall customer experience and loyalty through better service delivery",
+      "keyResults": [
+        {
+          "id": 1,
+          "title": "Achieve 90% customer satisfaction score",
+          "description": "Based on monthly NPS surveys and customer feedback",
+          "status": "behind",
+          "objectiveId": 1,
+          "order": 1,
+          "createdAt": "2026-02-24T18:23:24.933Z"
+        }
+      ],
+      "order": 1,
+      "createdAt": "2026-02-24T18:15:08.762Z"
+    }
+  ],
+  "nextObjectiveId": 2,
+  "nextKeyResultId": 2,
+  "exportDate": "2026-02-24T18:23:36.103Z",
+  "version": "1.0"
+}
