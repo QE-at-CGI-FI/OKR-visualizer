@@ -45,6 +45,21 @@
                         <span>Not Started</span>
                     </div>
                 </div>
+                <h4>Type Legend</h4>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <span class="type-indicator del"></span>
+                        <span>DEL - Delivered Revenue</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="type-indicator ext"></span>
+                        <span>EXT - External Revenue</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="type-indicator inv"></span>
+                        <span>INV - Investment to Future Revenue</span>
+                    </div>
+                </div>
             </div>
 
             <div id="objectives-container" class="objectives-container">
@@ -89,6 +104,14 @@
                         <option value="behind">Behind</option>
                         <option value="at-risk">At Risk</option>
                         <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="keyresult-type">Type:</label>
+                    <select id="keyresult-type" required>
+                        <option value="DEL">DEL (Delivered Revenue)</option>
+                        <option value="EXT">EXT (External Revenue)</option>
+                        <option value="INV">INV (Investment to Future Revenue)</option>
                     </select>
                 </div>
                 <div class="form-buttons">

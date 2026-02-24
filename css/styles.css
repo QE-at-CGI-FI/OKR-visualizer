@@ -105,10 +105,11 @@ body {
     color: #2c3e50;
 }
 
-.legend-items {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+.status-legend h4 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-size: 1rem;
 }
 
 .legend-item {
@@ -142,6 +143,36 @@ body {
 
 .status-indicator.not-started {
     background-color: #95a5a6;
+}
+
+/* Type indicators for legend */
+.type-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.type-indicator.del {
+    background-color: #fff3e0;
+    border: 2px solid #ff9800;
+}
+
+.type-indicator.ext {
+    background-color: #e8f5e8;
+    border: 2px solid #27ae60;
+}
+
+.type-indicator.inv {
+    background-color: #e3f2fd;
+    border: 2px solid #2196f3;
+}
+
+.legend-items {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
 /* Objectives container */
@@ -279,12 +310,33 @@ body {
     border-left-color: #2d5a2d;
 }
 
+.key-result-item.not-started {
+    border-left-color: #95a5a6;
+}
+
+/* Key result type-based background colors */
+.key-result-item.del {
+    background: linear-gradient(135deg, #fff3e0 0%, #fff8f0 100%) !important;
+    border-top: 2px solid #ff9800;
+}
+
+.key-result-item.ext {
+    background: linear-gradient(135deg, #e8f5e8 0%, #f1f9f1 100%) !important;
+    border-top: 2px solid #27ae60;
+}
+
+.key-result-item.inv {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f0f7ff 100%) !important;
+    border-top: 2px solid #2196f3;
+}
+
 .key-result-content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
     margin-bottom: 8px;
+    flex-direction: column;
 }
 
 .key-result-title {
@@ -292,6 +344,38 @@ body {
     color: #2c3e50;
     flex: 1;
     word-wrap: break-word;
+    margin-bottom: 6px;
+}
+
+.key-result-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.key-result-type {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+}
+
+.key-result-type.del {
+    background: #ff9800;
+    color: white;
+}
+
+.key-result-type.ext {
+    background: #27ae60;
+    color: white;
+}
+
+.key-result-type.inv {
+    background: #2196f3;
+    color: white;
 }
 
 .key-result-status {

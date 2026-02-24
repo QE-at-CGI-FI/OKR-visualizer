@@ -209,12 +209,17 @@ class OKRApp {
             'done': 'Done'
         };
 
+        const typeClass = keyResult.type ? keyResult.type.toLowerCase() : 'del';
+
         return `
-            <div class="key-result-item ${keyResult.status}" data-kr-id="${keyResult.id}" data-objective-id="${keyResult.objectiveId}">
+            <div class="key-result-item ${keyResult.status} ${typeClass}" data-kr-id="${keyResult.id}" data-objective-id="${keyResult.objectiveId}">
                 <div class="key-result-content">
                     <div class="key-result-title">${this.escapeHtml(keyResult.title)}</div>
-                    <div class="key-result-status ${keyResult.status}">
-                        ${statusLabels[keyResult.status]}
+                    <div class="key-result-meta">
+                        <div class="key-result-type ${typeClass}">${keyResult.type || 'DEL'}</div>
+                        <div class="key-result-status ${keyResult.status}">
+                            ${statusLabels[keyResult.status]}
+                        </div>
                     </div>
                 </div>
                 <div class="key-result-controls">
@@ -327,16 +332,19 @@ class OKRApp {
         const modal = document.getElementById('keyresult-modal');
         const titleInput = document.getElementById('keyresult-title');
         const statusSelect = document.getElementById('keyresult-status');
+        const typeSelect = document.getElementById('keyresult-type');
         const modalTitle = document.getElementById('kr-modal-title');
         
         if (keyResult) {
             modalTitle.textContent = 'Edit Key Result';
             titleInput.value = keyResult.title;
             statusSelect.value = keyResult.status;
+            typeSelect.value = keyResult.type || 'DEL';
         } else {
             modalTitle.textContent = 'Add Key Result';
             titleInput.value = '';
             statusSelect.value = 'not-started';
+            typeSelect.value = 'DEL';
         }
         
         modal.style.display = 'block';
@@ -352,6 +360,7 @@ class OKRApp {
     saveKeyResult() {
         const title = document.getElementById('keyresult-title').value.trim();
         const status = document.getElementById('keyresult-status').value;
+        const type = document.getElementById('keyresult-type').value;
         
         if (!title) {
             alert('Please enter a key result title');
@@ -362,6 +371,7 @@ class OKRApp {
             // Edit existing key result
             this.currentEditingKeyResult.title = title;
             this.currentEditingKeyResult.status = status;
+            this.currentEditingKeyResult.type = type;
         } else {
             // Create new key result
             const objective = this.data.objectives.find(obj => obj.id === this.currentObjectiveId);
@@ -370,6 +380,7 @@ class OKRApp {
                     id: this.data.nextKeyResultId++,
                     title: title,
                     status: status,
+                    type: type,
                     objectiveId: this.currentObjectiveId,
                     order: objective.keyResults.length + 1,
                     createdAt: new Date().toISOString()
