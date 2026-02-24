@@ -916,19 +916,20 @@ class OKRApp {
                     padding: 20px 25px;
                     display: flex;
                     gap: 20px;
-                    align-items: start;
+                    align-items: stretch;
                 }
                 .condensed-column {
                     flex: 1;
                     display: flex;
                     flex-direction: column;
-                    gap: 20px;
+                    gap: 12px;
                 }
                 .condensed-objective {
-                    margin-bottom: 20px;
+                    margin-bottom: 0;
                     border: 1px solid #dee2e6;
                     border-radius: 8px;
                     overflow: hidden;
+                    flex-shrink: 0;
                 }
                 .condensed-obj-header {
                     background: #f8f9fa;
