@@ -253,21 +253,21 @@ body {
 
 /* Key result type-based background colors */
 .key-result-item.del {
-    background-color: #e3f2fd;
-    background: -webkit-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -moz-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -o-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background-color: #f3f9ff;
+    background: -webkit-linear-gradient(135deg, #e8f3ff 0%, #f3f9ff 100%) !important;
+    background: -moz-linear-gradient(135deg, #e8f3ff 0%, #f3f9ff 100%) !important;
+    background: -o-linear-gradient(135deg, #e8f3ff 0%, #f3f9ff 100%) !important;
+    background: linear-gradient(135deg, #e8f3ff 0%, #f3f9ff 100%) !important;
+    border-top: 2px solid #64b5f6;
 }
 
 .key-result-item.ext {
-    background-color: #e3f2fd;
-    background: -webkit-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -moz-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -o-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background-color: #dbeafe;
+    background: -webkit-linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%) !important;
+    background: -moz-linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%) !important;
+    background: -o-linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%) !important;
+    background: linear-gradient(135deg, #bfdbfe 0%, #dbeafe 100%) !important;
+    border-top: 2px solid #3b82f6;
 }
 
 .key-result-item.inv {
@@ -280,12 +280,12 @@ body {
 }
 
 .key-result-item.ext-del {
-    background-color: #e3f2fd;
-    background: -webkit-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -moz-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: -o-linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    background: linear-gradient(135deg, #bbdefb 0%, #e3f2fd 100%) !important;
-    border-top: 2px solid #1976d2;
+    background-color: #dbeafe;
+    background: -webkit-linear-gradient(135deg, #a5b4fc 0%, #dbeafe 100%) !important;
+    background: -moz-linear-gradient(135deg, #a5b4fc 0%, #dbeafe 100%) !important;
+    background: -o-linear-gradient(135deg, #a5b4fc 0%, #dbeafe 100%) !important;
+    background: linear-gradient(135deg, #a5b4fc 0%, #dbeafe 100%) !important;
+    border-top: 2px solid #6366f1;
 }
 
 .key-result-content {
