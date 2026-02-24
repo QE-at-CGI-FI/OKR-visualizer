@@ -1,0 +1,2 @@
+# OKR data files should not be in version control
+okr-data*.json
