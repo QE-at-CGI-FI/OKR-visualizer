@@ -3,14 +3,12 @@
     {
       "id": 1,
       "title": "Increase Customer Satisfaction",
-      "description": "Improve overall customer experience and loyalty through better service delivery and product quality",
       "order": 1,
       "createdAt": "2026-02-24T10:00:00.000Z",
       "keyResults": [
         {
           "id": 1,
           "title": "Achieve 90% customer satisfaction score",
-          "description": "Based on monthly NPS surveys and customer feedback",
           "status": "on-track",
           "objectiveId": 1,
           "order": 1,
@@ -19,7 +17,6 @@
         {
           "id": 2,
           "title": "Reduce customer support response time to under 2 hours",
-          "description": "Average first response time for all support tickets",
           "status": "behind",
           "objectiveId": 1,
           "order": 2,
@@ -28,7 +25,6 @@
         {
           "id": 3,
           "title": "Implement customer feedback loop with 95% response rate",
-          "description": "Automated feedback collection after each interaction",
           "status": "done",
           "objectiveId": 1,
           "order": 3,
@@ -39,14 +35,12 @@
     {
       "id": 2,
       "title": "Expand Market Reach",
-      "description": "Enter new geographic markets and increase brand awareness",
       "order": 2,
       "createdAt": "2026-02-24T10:10:00.000Z",
       "keyResults": [
         {
           "id": 4,
           "title": "Launch in 3 new international markets",
-          "description": "Complete market entry including localization and partnerships",
           "status": "at-risk",
           "objectiveId": 2,
           "order": 1,
@@ -55,7 +49,6 @@
         {
           "id": 5,
           "title": "Increase brand awareness by 40%",
-          "description": "Measured through aided and unaided brand recognition surveys",
           "status": "on-track",
           "objectiveId": 2,
           "order": 2,
@@ -66,14 +59,12 @@
     {
       "id": 3,
       "title": "Improve Operational Efficiency",
-      "description": "Streamline processes and reduce operational costs while maintaining quality",
       "order": 3,
       "createdAt": "2026-02-24T10:15:00.000Z",
       "keyResults": [
         {
           "id": 6,
           "title": "Reduce operational costs by 15%",
-          "description": "Year-over-year comparison of total operational expenses",
           "status": "on-track",
           "objectiveId": 3,
           "order": 1,
@@ -82,8 +73,7 @@
         {
           "id": 7,
           "title": "Automate 70% of manual processes",
-          "description": "Implement automation tools for repetitive tasks",
-          "status": "behind",
+          "status": "not-started",
           "objectiveId": 3,
           "order": 2,
           "createdAt": "2026-02-24T10:17:00.000Z"
@@ -91,7 +81,6 @@
         {
           "id": 8,
           "title": "Achieve 99.5% system uptime",
-          "description": "Measured across all critical business systems",
           "status": "done",
           "objectiveId": 3,
           "order": 3,

@@ -40,6 +40,10 @@
                         <span class="status-indicator done"></span>
                         <span>Done</span>
                     </div>
+                    <div class="legend-item">
+                        <span class="status-indicator not-started"></span>
+                        <span>Not Started</span>
+                    </div>
                 </div>
             </div>
 
@@ -58,10 +62,6 @@
                 <div class="form-group">
                     <label for="objective-title">Objective Title:</label>
                     <input type="text" id="objective-title" required>
-                </div>
-                <div class="form-group">
-                    <label for="objective-description">Description:</label>
-                    <textarea id="objective-description" rows="3"></textarea>
                 </div>
                 <div class="form-buttons">
                     <button type="submit" class="btn btn-primary">Save Objective</button>
@@ -82,12 +82,9 @@
                     <input type="text" id="keyresult-title" required>
                 </div>
                 <div class="form-group">
-                    <label for="keyresult-description">Description:</label>
-                    <textarea id="keyresult-description" rows="3"></textarea>
-                </div>
-                <div class="form-group">
                     <label for="keyresult-status">Status:</label>
                     <select id="keyresult-status" required>
+                        <option value="not-started">Not Started</option>
                         <option value="on-track">On Track</option>
                         <option value="behind">Behind</option>
                         <option value="at-risk">At Risk</option>

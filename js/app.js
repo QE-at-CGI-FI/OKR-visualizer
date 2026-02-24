@@ -151,7 +151,6 @@ class OKRApp {
         objectiveCard.innerHTML = `
             <div class="objective-header">
                 <div class="objective-title">${this.escapeHtml(objective.title)}</div>
-                ${objective.description ? `<div class="objective-description">${this.escapeHtml(objective.description)}</div>` : ''}
                 <div class="objective-progress">
                     <small>${doneKeyResults}/${totalKeyResults} Key Results Complete (${progressPercent}%)</small>
                 </div>
@@ -203,6 +202,7 @@ class OKRApp {
 
     createKeyResultHTML(keyResult) {
         const statusLabels = {
+            'not-started': 'Not Started',
             'on-track': 'On Track',
             'behind': 'Behind',
             'at-risk': 'At Risk',
@@ -216,11 +216,10 @@ class OKRApp {
                     <div class="key-result-status ${keyResult.status}">
                         ${statusLabels[keyResult.status]}
                     </div>
-                </div>
-                ${keyResult.description ? `<div class="key-result-description">${this.escapeHtml(keyResult.description)}</div>` : ''}
-                <div class="key-result-controls">
-                    <button class="btn btn-small btn-secondary edit-key-result" title="Edit">✏️</button>
-                    <button class="btn btn-small btn-danger delete-key-result" title="Delete">🗑️</button>
+                    <div class="key-result-controls">
+                        <button class="btn btn-small btn-secondary edit-key-result" title="Edit">✏️</button>
+                        <button class="btn btn-small btn-danger delete-key-result" title="Delete">🗑️</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -273,17 +272,14 @@ class OKRApp {
         this.currentEditingObjective = objective;
         const modal = document.getElementById('objective-modal');
         const titleInput = document.getElementById('objective-title');
-        const descriptionInput = document.getElementById('objective-description');
         const modalTitle = document.getElementById('modal-title');
         
         if (objective) {
             modalTitle.textContent = 'Edit Objective';
             titleInput.value = objective.title;
-            descriptionInput.value = objective.description || '';
         } else {
             modalTitle.textContent = 'Add Objective';
             titleInput.value = '';
-            descriptionInput.value = '';
         }
         
         modal.style.display = 'block';
@@ -297,7 +293,6 @@ class OKRApp {
 
     saveObjective() {
         const title = document.getElementById('objective-title').value.trim();
-        const description = document.getElementById('objective-description').value.trim();
         
         if (!title) {
             alert('Please enter an objective title');
@@ -307,13 +302,11 @@ class OKRApp {
         if (this.currentEditingObjective) {
             // Edit existing objective
             this.currentEditingObjective.title = title;
-            this.currentEditingObjective.description = description;
         } else {
             // Create new objective
             const newObjective = {
                 id: this.data.nextObjectiveId++,
                 title: title,
-                description: description,
                 keyResults: [],
                 order: this.data.objectives.length + 1,
                 createdAt: new Date().toISOString()
@@ -333,20 +326,17 @@ class OKRApp {
         
         const modal = document.getElementById('keyresult-modal');
         const titleInput = document.getElementById('keyresult-title');
-        const descriptionInput = document.getElementById('keyresult-description');
         const statusSelect = document.getElementById('keyresult-status');
         const modalTitle = document.getElementById('kr-modal-title');
         
         if (keyResult) {
             modalTitle.textContent = 'Edit Key Result';
             titleInput.value = keyResult.title;
-            descriptionInput.value = keyResult.description || '';
             statusSelect.value = keyResult.status;
         } else {
             modalTitle.textContent = 'Add Key Result';
             titleInput.value = '';
-            descriptionInput.value = '';
-            statusSelect.value = 'on-track';
+            statusSelect.value = 'not-started';
         }
         
         modal.style.display = 'block';
@@ -361,7 +351,6 @@ class OKRApp {
 
     saveKeyResult() {
         const title = document.getElementById('keyresult-title').value.trim();
-        const description = document.getElementById('keyresult-description').value.trim();
         const status = document.getElementById('keyresult-status').value;
         
         if (!title) {
@@ -372,7 +361,6 @@ class OKRApp {
         if (this.currentEditingKeyResult) {
             // Edit existing key result
             this.currentEditingKeyResult.title = title;
-            this.currentEditingKeyResult.description = description;
             this.currentEditingKeyResult.status = status;
         } else {
             // Create new key result
@@ -381,7 +369,6 @@ class OKRApp {
                 const newKeyResult = {
                     id: this.data.nextKeyResultId++,
                     title: title,
-                    description: description,
                     status: status,
                     objectiveId: this.currentObjectiveId,
                     order: objective.keyResults.length + 1,
