@@ -153,14 +153,14 @@ class OKRApp {
                 <div class="objective-title">${this.escapeHtml(objective.title)}</div>
                 <div class="objective-progress">
                     <small>${doneKeyResults}/${totalKeyResults} Key Results Complete (${progressPercent}%)</small>
-                </div>
-                <div class="objective-controls">
-                    <button class="btn btn-small btn-outline edit-objective" title="Edit Objective">
-                        ✏️ Edit
-                    </button>
-                    <button class="btn btn-small btn-outline delete-objective" title="Delete Objective">
-                        🗑️ Delete
-                    </button>
+                    <div class="objective-controls">
+                        <button class="btn btn-small btn-outline edit-objective" title="Edit Objective">
+                            ✏️ Edit
+                        </button>
+                        <button class="btn btn-small btn-outline delete-objective" title="Delete Objective">
+                            🗑️ Delete
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="key-results">
