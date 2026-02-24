@@ -774,10 +774,12 @@ class OKRApp {
         const investment = this.data.objectives.reduce((total, obj) => 
             total + obj.keyResults.filter(kr => kr.type === 'INV').length, 0);
 
-        // Split objectives into two halves
-        const midpoint = Math.ceil(this.data.objectives.length / 2);
-        const leftObjectives = this.data.objectives.slice(0, midpoint);
-        const rightObjectives = this.data.objectives.slice(midpoint);
+        // Split objectives into three columns
+        const thirdPoint = Math.ceil(this.data.objectives.length / 3);
+        const twoThirdsPoint = Math.ceil((this.data.objectives.length * 2) / 3);
+        const leftObjectives = this.data.objectives.slice(0, thirdPoint);
+        const middleObjectives = this.data.objectives.slice(thirdPoint, twoThirdsPoint);
+        const rightObjectives = this.data.objectives.slice(twoThirdsPoint);
 
         const generateObjectivesHTML = (objectives, startIndex = 0) => {
             return objectives.map((objective, index) => {
@@ -815,7 +817,8 @@ class OKRApp {
         };
 
         const leftObjectivesHTML = generateObjectivesHTML(leftObjectives, 0);
-        const rightObjectivesHTML = generateObjectivesHTML(rightObjectives, leftObjectives.length);
+        const middleObjectivesHTML = generateObjectivesHTML(middleObjectives, leftObjectives.length);
+        const rightObjectivesHTML = generateObjectivesHTML(rightObjectives, leftObjectives.length + middleObjectives.length);
 
         return `
             <div class="condensed-content">
@@ -835,6 +838,9 @@ class OKRApp {
                 <div class="condensed-objectives">
                     <div class="condensed-column">
                         ${leftObjectivesHTML}
+                    </div>
+                    <div class="condensed-column">
+                        ${middleObjectivesHTML}
                     </div>
                     <div class="condensed-column">
                         ${rightObjectivesHTML}
