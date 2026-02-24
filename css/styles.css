@@ -275,17 +275,19 @@ body {
     border-left-color: #2d5a2d;
 }
 
-.key-result-header {
+.key-result-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
+    margin-bottom: 8px;
 }
 
 .key-result-title {
     font-weight: 600;
     color: #2c3e50;
     flex: 1;
+    word-wrap: break-word;
 }
 
 .key-result-status {
@@ -330,6 +332,7 @@ body {
     justify-content: flex-end;
     opacity: 0;
     transition: opacity 0.3s ease;
+    padding-top: 4px;
 }
 
 .key-result-item:hover .key-result-controls {

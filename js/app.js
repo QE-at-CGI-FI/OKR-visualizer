@@ -211,15 +211,15 @@ class OKRApp {
 
         return `
             <div class="key-result-item ${keyResult.status}" data-kr-id="${keyResult.id}" data-objective-id="${keyResult.objectiveId}">
-                <div class="key-result-header">
+                <div class="key-result-content">
                     <div class="key-result-title">${this.escapeHtml(keyResult.title)}</div>
                     <div class="key-result-status ${keyResult.status}">
                         ${statusLabels[keyResult.status]}
                     </div>
-                    <div class="key-result-controls">
-                        <button class="btn btn-small btn-secondary edit-key-result" title="Edit">✏️</button>
-                        <button class="btn btn-small btn-danger delete-key-result" title="Delete">🗑️</button>
-                    </div>
+                </div>
+                <div class="key-result-controls">
+                    <button class="btn btn-small btn-secondary edit-key-result" title="Edit">✏️</button>
+                    <button class="btn btn-small btn-danger delete-key-result" title="Delete">🗑️</button>
                 </div>
             </div>
         `;
