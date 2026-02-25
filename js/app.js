@@ -211,6 +211,7 @@ class OKRApp {
     createKeyResultHTML(keyResult) {
         const statusLabels = {
             'not-started': 'Not Started',
+            'committed': 'Committed',
             'on-track': 'On Track',
             'behind': 'Behind',
             'at-risk': 'At Risk',

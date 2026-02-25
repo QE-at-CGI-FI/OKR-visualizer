@@ -235,6 +235,10 @@ body {
     border-left-color: #27ae60;
 }
 
+.key-result-item.committed {
+    border-left-color: #3498db;
+}
+
 .key-result-item.behind {
     border-left-color: #f39c12;
 }
@@ -355,6 +359,11 @@ body {
 .key-result-status.on-track {
     background: rgba(39, 174, 96, 0.1);
     color: #27ae60;
+}
+
+.key-result-status.committed {
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
 }
 
 .key-result-status.behind {
