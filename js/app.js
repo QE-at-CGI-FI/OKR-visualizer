@@ -849,6 +849,7 @@ class OKRApp {
                 <div class="condensed-summary">
                     <span class="condensed-stat completed">✓ ${completedKeyResults}</span>
                     <span class="condensed-stat started">● ${startedKeyResults}</span>
+                    <span class="condensed-stat committed">◉ ${committedKeyResults}</span>
                     <span class="condensed-stat not-started">○ ${notStartedKeyResults}</span>
                     <span class="condensed-stat revenue">$ ${revenueGenerating}</span>
                     <span class="condensed-stat investment">⬆ ${investment}</span>
@@ -934,6 +935,7 @@ class OKRApp {
                 }
                 .condensed-stat.completed { color: #27ae60; }
                 .condensed-stat.started { color: #f39c12; }
+                .condensed-stat.committed { color: #3498db; }
                 .condensed-stat.not-started { color: #95a5a6; }
                 .condensed-stat.revenue { color: #27ae60; }
                 .condensed-stat.investment { color: #8e44ad; }
@@ -1006,6 +1008,7 @@ class OKRApp {
                 }
                 .condensed-kr-status.status-done { background: #27ae60; color: white; }
                 .condensed-kr-status.status-started { background: #f39c12; color: white; }
+                .condensed-kr-status.status-committed { background: #3498db; color: white; }
                 .condensed-kr-status.status-not-started { background: #95a5a6; color: white; }
                 .condensed-kr-title {
                     flex: 1;
@@ -1032,9 +1035,12 @@ class OKRApp {
         const totalKeyResults = this.data.objectives.reduce((total, obj) => total + obj.keyResults.length, 0);
         const completedKeyResults = this.data.objectives.reduce((total, obj) => 
             total + obj.keyResults.filter(kr => kr.status === 'done').length, 0);
+        const committedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'committed').length, 0);
         const startedKeyResults = this.data.objectives.reduce((total, obj) => 
-            total + obj.keyResults.filter(kr => kr.status !== 'not-started' && kr.status !== 'done').length, 0);
-        const notStartedKeyResults = totalKeyResults - completedKeyResults - startedKeyResults;
+            total + obj.keyResults.filter(kr => ['on-track', 'behind', 'at-risk'].includes(kr.status)).length, 0);
+        const notStartedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'not-started').length, 0);
         
         // Categorize by revenue type
         const revenueGenerating = this.data.objectives.reduce((total, obj) => 
@@ -1315,6 +1321,7 @@ class OKRApp {
     getStatusIcon(status) {
         switch (status) {
             case 'done': return '✓';
+            case 'committed': return '◉';
             case 'not-started': return '○';
             default: return '●'; // on-track, behind, at-risk
         }
@@ -1322,6 +1329,7 @@ class OKRApp {
 
     getStatusClass(status) {
         if (status === 'done') return 'status-done';
+        if (status === 'committed') return 'status-committed';
         if (status === 'not-started') return 'status-not-started';
         return 'status-started'; // on-track, behind, at-risk
     }
