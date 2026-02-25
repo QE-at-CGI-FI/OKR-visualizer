@@ -123,7 +123,7 @@ class OKRStorage {
             // Validate each key result
             for (const kr of objective.keyResults) {
                 if (kr.id == null || !kr.title || !kr.status) return false;
-                if (!['not-started', 'on-track', 'behind', 'at-risk', 'done'].includes(kr.status)) return false;
+                if (!['not-started', 'on-track', 'behind', 'at-risk', 'done', 'committed'].includes(kr.status)) return false;
             }
         }
 
