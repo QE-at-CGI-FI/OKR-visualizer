@@ -742,7 +742,7 @@ class OKRApp {
         // Generate the condensed HTML
         const condensedHTML = this.generateCondensedHTML();
         condensedContainer.innerHTML = condensedHTML;
-        condensedContainer.style.display = 'block';
+        condensedContainer.style.display = 'flex';
 
         // Add close button functionality
         const closeBtn = condensedContainer.querySelector('.condensed-close');
