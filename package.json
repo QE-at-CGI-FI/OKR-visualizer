@@ -1,0 +1,23 @@
+{
+  "name": "okr-visualizer",
+  "version": "1.0.0",
+  "description": "A comprehensive web application for visualizing and managing Objectives and Key Results (OKRs) with an intuitive drag-and-drop interface and persistent local storage.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QE-at-CGI-FI/OKR-visualizer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/QE-at-CGI-FI/OKR-visualizer/issues"
+  },
+  "homepage": "https://github.com/QE-at-CGI-FI/OKR-visualizer#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.0"
+  }
+}

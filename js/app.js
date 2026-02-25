@@ -765,9 +765,11 @@ class OKRApp {
         const totalKeyResults = this.data.objectives.reduce((total, obj) => total + obj.keyResults.length, 0);
         const completedKeyResults = this.data.objectives.reduce((total, obj) => 
             total + obj.keyResults.filter(kr => kr.status === 'done').length, 0);
+        const committedKeyResults = this.data.objectives.reduce((total, obj) => 
+            total + obj.keyResults.filter(kr => kr.status === 'committed').length, 0);
         const startedKeyResults = this.data.objectives.reduce((total, obj) => 
-            total + obj.keyResults.filter(kr => kr.status !== 'not-started' && kr.status !== 'done').length, 0);
-        const notStartedKeyResults = totalKeyResults - completedKeyResults - startedKeyResults;
+            total + obj.keyResults.filter(kr => kr.status !== 'not-started' && kr.status !== 'done' && kr.status !== 'committed').length, 0);
+        const notStartedKeyResults = totalKeyResults - completedKeyResults - startedKeyResults - committedKeyResults;
         
         // Categorize by revenue type
         const revenueGenerating = this.data.objectives.reduce((total, obj) => 

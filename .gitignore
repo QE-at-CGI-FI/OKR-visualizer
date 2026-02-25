@@ -1,2 +1,10 @@
 # OKR data files should not be in version control
 okr-data*.json
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
