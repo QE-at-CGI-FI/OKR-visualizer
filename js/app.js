@@ -826,6 +826,7 @@ class OKRApp {
                         <div class="condensed-kr ${statusClass} ${typeClass}">
                             <span class="condensed-kr-status ${this.getStatusClass(kr.status)}">${statusIcon}</span>
                             <span class="condensed-kr-title">${this.escapeHtml(kr.title)}</span>
+                            ${kr.isNew ? '<span class="condensed-kr-star">★</span>' : ''}
                             <span class="condensed-kr-type condensed-type-${kr.type?.toLowerCase()?.replace('/', '-') || 'none'}">${kr.type || 'N/A'}</span>
                         </div>
                     `;
@@ -1028,6 +1029,11 @@ class OKRApp {
                 .condensed-kr-title {
                     flex: 1;
                     line-height: 1.3;
+                }
+                .condensed-kr-star {
+                    color: #f5a623;
+                    font-size: 11px;
+                    flex-shrink: 0;
                 }
                 .condensed-kr-type {
                     font-size: 9px;
