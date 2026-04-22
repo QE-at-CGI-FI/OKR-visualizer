@@ -219,11 +219,16 @@ class OKRApp {
         };
 
         const typeClass = keyResult.type ? keyResult.type.toLowerCase().replace('/', '-') : 'del';
+        const isNew = keyResult.isNew ? 'active' : '';
+        const starTitle = keyResult.isNew ? 'Unmark as new' : 'Mark as new';
 
         return `
             <div class="key-result-item ${keyResult.status} ${typeClass}" data-kr-id="${keyResult.id}" data-objective-id="${keyResult.objectiveId}">
                 <div class="key-result-content">
-                    <div class="key-result-title">${this.escapeHtml(keyResult.title)}</div>
+                    <div class="key-result-title-row">
+                        <div class="key-result-title">${this.escapeHtml(keyResult.title)}</div>
+                        <button class="star-btn ${isNew}" title="${starTitle}" aria-label="${starTitle}">★</button>
+                    </div>
                     <div class="key-result-meta">
                         <div class="key-result-type ${typeClass}">${keyResult.type || 'DEL'}</div>
                         <div class="key-result-status ${keyResult.status}">
@@ -267,6 +272,14 @@ class OKRApp {
                 // Make key result draggable
                 this.dragDropManager.makeKeyResultDraggable(krElement, keyResult);
                 
+                // Toggle new star
+                krElement.querySelector('.star-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    keyResult.isNew = !keyResult.isNew;
+                    this.saveData();
+                    this.renderObjectives();
+                });
+
                 // Edit key result
                 krElement.querySelector('.edit-key-result').addEventListener('click', (e) => {
                     e.stopPropagation();

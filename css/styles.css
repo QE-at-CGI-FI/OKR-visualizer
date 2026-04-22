@@ -301,12 +301,46 @@ body {
     flex-direction: column;
 }
 
+.key-result-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+}
+
 .key-result-title {
     font-weight: 600;
     color: #2c3e50;
     flex: 1;
     word-wrap: break-word;
     margin-bottom: 6px;
+}
+
+.star-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 2px 4px;
+    border-radius: 4px;
+    color: #ccc;
+    opacity: 0;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    flex-shrink: 0;
+}
+
+.key-result-item:hover .star-btn {
+    opacity: 1;
+}
+
+.star-btn.active {
+    color: #f5a623;
+    opacity: 1;
+}
+
+.star-btn:hover {
+    color: #f5a623;
 }
 
 .key-result-meta {
